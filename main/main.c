@@ -19,18 +19,19 @@
 
 static GlobalState GLOBAL_STATE = {.extranonce_str = NULL, .extranonce_2_len = 0, .abandon_work = 0, .version_mask = 0};
 
-static const char * TAG = "bitaxe";
+static const char * TAG = "hashdevil";
 static const double NONCE_SPACE = 4294967296.0; //  2^32
 
 void app_main(void)
 {
-    ESP_LOGI(TAG, "Welcome to the bitaxe - hack the planet!");
+    ESP_LOGI(TAG, "Welcome to the hashdevil");
     ESP_ERROR_CHECK(nvs_flash_init());
 
-    GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = nvs_config_get_u16(NVS_CONFIG_ASIC_FREQ, CONFIG_ASIC_FREQUENCY);
+    //GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = nvs_config_get_u16(NVS_CONFIG_ASIC_FREQ, CONFIG_ASIC_FREQUENCY);
+    GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = 390 ; // Brut force to 550MHz
     ESP_LOGI(TAG, "NVS_CONFIG_ASIC_FREQ %f", (float)GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value);
 
-    GLOBAL_STATE.device_model_str = nvs_config_get_string(NVS_CONFIG_DEVICE_MODEL, "");
+    GLOBAL_STATE.device_model_str = nvs_config_get_string(NVS_CONFIG_DEVICE_MODEL, "supra"); //modified for HashBoard 12 asics
     if (strcmp(GLOBAL_STATE.device_model_str, "max") == 0) {
         ESP_LOGI(TAG, "DEVICE: Max");
         GLOBAL_STATE.device_model = DEVICE_MAX;
@@ -39,13 +40,13 @@ void app_main(void)
     } else if (strcmp(GLOBAL_STATE.device_model_str, "ultra") == 0) {
         ESP_LOGI(TAG, "DEVICE: Ultra");
         GLOBAL_STATE.device_model = DEVICE_ULTRA;
-        GLOBAL_STATE.asic_count = 1;
-        GLOBAL_STATE.voltage_domain = 1;
+        GLOBAL_STATE.asic_count = 8;  //modified for HashDevil 8 asics
+        GLOBAL_STATE.voltage_domain = 4;
     } else if (strcmp(GLOBAL_STATE.device_model_str, "supra") == 0) {
         ESP_LOGI(TAG, "DEVICE: Supra");
         GLOBAL_STATE.device_model = DEVICE_SUPRA;
-        GLOBAL_STATE.asic_count = 1;
-        GLOBAL_STATE.voltage_domain = 1;
+        GLOBAL_STATE.asic_count = 12;
+        GLOBAL_STATE.voltage_domain = 6;
     } else {
         ESP_LOGE(TAG, "Invalid DEVICE model");
         // maybe should return here to now execute anything with a faulty device parameter !
@@ -58,7 +59,7 @@ void app_main(void)
     ESP_LOGI(TAG, "Found Device Model: %s", GLOBAL_STATE.device_model_str);
     ESP_LOGI(TAG, "Found Board Version: %d", GLOBAL_STATE.board_version);
 
-    GLOBAL_STATE.asic_model_str = nvs_config_get_string(NVS_CONFIG_ASIC_MODEL, "");
+    GLOBAL_STATE.asic_model_str = nvs_config_get_string(NVS_CONFIG_ASIC_MODEL, "BM1397"); //modified for HashBoard 12 asics
     if (strcmp(GLOBAL_STATE.asic_model_str, "BM1366") == 0) {
         ESP_LOGI(TAG, "ASIC: %dx BM1366 (%" PRIu64 " cores)", GLOBAL_STATE.asic_count, BM1366_CORE_COUNT);
         GLOBAL_STATE.asic_model = ASIC_BM1366;

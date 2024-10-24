@@ -15,7 +15,7 @@
 #include "mining.h"
 #include "global_state.h"
 
-#define BM1397_RST_PIN GPIO_NUM_1
+#define BM1397_RST_PIN GPIO_NUM_10
 
 #define TYPE_JOB 0x20
 #define TYPE_CMD 0x40
@@ -224,7 +224,8 @@ static uint8_t _send_init(uint64_t frequency, uint16_t asic_count)
 
     int chip_counter = 0;
     while (true) {
-        if (SERIAL_rx(asic_response_buffer, 11, 1000) > 0) {
+        if (SERIAL_rx(asic_response_buffer, 9, 1000) > 0) {
+            ESP_LOG_BUFFER_HEX(TAG, asic_response_buffer, 9);
             chip_counter++;
         } else {
             break;

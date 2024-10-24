@@ -1,14 +1,8 @@
-#include "i2c_master.h"
-#include "DS4432U.h"
-#include "EMC2101.h"
-#include "INA260.h"
-#include "adc.h"
+//#include "adc.h"
 #include "esp_log.h"
 #include "global_state.h"
 #include "nvs_config.h"
 #include "nvs_flash.h"
-#include "oled.h"
-#include "vcore.h"
 #include "utils.h"
 #include "string.h"
 
@@ -21,11 +15,11 @@ static void display_msg(char * msg, GlobalState * GLOBAL_STATE) {
         case DEVICE_MAX:
         case DEVICE_ULTRA:
         case DEVICE_SUPRA:
-            if (OLED_status()) {
-                memset(module->oled_buf, 0, 20);
-                snprintf(module->oled_buf, 20, msg);
-                OLED_writeString(0, 2, module->oled_buf);
-            }
+            // if (OLED_status()) {
+            //     memset(module->oled_buf, 0, 20);
+            //     snprintf(module->oled_buf, 20, msg);
+            //     OLED_writeString(0, 2, module->oled_buf);
+            // }
             break;
         default:
     }
@@ -38,35 +32,35 @@ static bool fan_sense_pass(GlobalState * GLOBAL_STATE)
         case DEVICE_MAX:
         case DEVICE_ULTRA:
         case DEVICE_SUPRA:
-            fan_speed = EMC2101_get_fan_speed();
+            // fan_speed = EMC2101_get_fan_speed();
             break;
         default:
     }
-    ESP_LOGI(TAG, "fanSpeed: %d", fan_speed);
-    if (fan_speed > 1000) {
-        return true;
-    }
+    // ESP_LOGI(TAG, "fanSpeed: %d", fan_speed);
+    // if (fan_speed > 1000) {
+    //     return true;
+    // }
     return false;
 }
 
 static bool power_consumption_pass()
 {
-    float power = INA260_read_power() / 1000;
-    ESP_LOGI(TAG, "Power: %f", power);
-    if (power > 9 && power < 15) {
-        return true;
-    }
+    // float power = INA260_read_power() / 1000;
+    // ESP_LOGI(TAG, "Power: %f", power);
+    // if (power > 9 && power < 15) {
+    //     return true;
+    // }
     return false;
 }
 
 static bool core_voltage_pass(GlobalState * GLOBAL_STATE)
 {
-    uint16_t core_voltage = VCORE_get_voltage_mv(GLOBAL_STATE);
-    ESP_LOGI(TAG, "Voltage: %u", core_voltage);
+    // uint16_t core_voltage = VCORE_get_voltage_mv(GLOBAL_STATE);
+    // ESP_LOGI(TAG, "Voltage: %u", core_voltage);
 
-    if (core_voltage > 1100 && core_voltage < 1300) {
-        return true;
-    }
+    // if (core_voltage > 1100 && core_voltage < 1300) {
+    //     return true;
+    // }
     return false;
 }
 
@@ -96,18 +90,18 @@ void self_test(void * pvParameters)
     }
 
     // Init I2C
-    ESP_ERROR_CHECK(i2c_master_init());
-    ESP_LOGI(TAG, "I2C initialized successfully");
+    // ESP_ERROR_CHECK(i2c_master_init());
+    // ESP_LOGI(TAG, "I2C initialized successfully");
 
-    VCORE_init(GLOBAL_STATE);
-    VCORE_set_voltage(nvs_config_get_u16(NVS_CONFIG_ASIC_VOLTAGE, CONFIG_ASIC_VOLTAGE) / 1000.0, GLOBAL_STATE);
+    // VCORE_init(GLOBAL_STATE);
+    // VCORE_set_voltage(nvs_config_get_u16(NVS_CONFIG_ASIC_VOLTAGE, CONFIG_ASIC_VOLTAGE) / 1000.0, GLOBAL_STATE);
 
     switch (GLOBAL_STATE->device_model) {
         case DEVICE_MAX:
         case DEVICE_ULTRA:
         case DEVICE_SUPRA:
-            EMC2101_init(nvs_config_get_u16(NVS_CONFIG_INVERT_FAN_POLARITY, 1));
-            EMC2101_set_fan_speed(1);
+            // EMC2101_init(nvs_config_get_u16(NVS_CONFIG_INVERT_FAN_POLARITY, 1));
+            // EMC2101_set_fan_speed(1);
             break;
         default:
     }
@@ -117,14 +111,14 @@ void self_test(void * pvParameters)
         case DEVICE_MAX:
         case DEVICE_ULTRA:
         case DEVICE_SUPRA:
-            if (!OLED_init()) {
-                ESP_LOGE(TAG, "OLED init failed!");
-            } else {
-                ESP_LOGI(TAG, "OLED init success!");
-                // clear the oled screen
-                OLED_fill(0);
-                display_msg("SELF TEST...", GLOBAL_STATE);
-            }
+            // if (!OLED_init()) {
+            //     ESP_LOGE(TAG, "OLED init failed!");
+            // } else {
+            //     ESP_LOGI(TAG, "OLED init success!");
+            //     // clear the oled screen
+            //     OLED_fill(0);
+            //     display_msg("SELF TEST...", GLOBAL_STATE);
+            // }
             break;
         default:
     }
@@ -135,10 +129,10 @@ void self_test(void * pvParameters)
         case DEVICE_ULTRA:
         case DEVICE_SUPRA:
             if(GLOBAL_STATE->board_version != 402){
-                if(!DS4432U_test()){
-                    ESP_LOGE(TAG, "DS4432 test failed!");
-                    display_msg("DS4432U:FAIL", GLOBAL_STATE);
-                }
+                // if(!DS4432U_test()){
+                //     ESP_LOGE(TAG, "DS4432 test failed!");
+                //     display_msg("DS4432U:FAIL", GLOBAL_STATE);
+                // }
             }
             break;
         default:
@@ -233,21 +227,22 @@ void self_test(void * pvParameters)
         case DEVICE_MAX:
         case DEVICE_ULTRA:
         case DEVICE_SUPRA:
-            if (INA260_installed() && !power_consumption_pass()) {
-                ESP_LOGE(TAG, "INA260 test failed!");
-                display_msg("MONITOR:   FAIL", GLOBAL_STATE);
-                return;
-            }
+            // if (INA260_installed() && !power_consumption_pass()) {
+            //     ESP_LOGE(TAG, "INA260 test failed!");
+            //     display_msg("MONITOR:   FAIL", GLOBAL_STATE);
+            //     return;
+            // }
             break;
         default:
     }
 
-    if (!fan_sense_pass(GLOBAL_STATE)) {
-        ESP_LOGE(TAG, "FAN test failed!");
-        display_msg("FAN:       WARN", GLOBAL_STATE);
-    }
+    // if (!fan_sense_pass(GLOBAL_STATE)) {
+    //     ESP_LOGE(TAG, "FAN test failed!");
+    //     display_msg("FAN:       WARN", GLOBAL_STATE);
+    // }
 
 
-    display_msg("           PASS", GLOBAL_STATE);
+    //display_msg("           PASS", GLOBAL_STATE);
+    ESP_LOGE(TAG, "SELF TEST PASS");
     nvs_config_set_u16(NVS_CONFIG_SELF_TEST, 0);
 }

@@ -9,7 +9,7 @@ menu "Bitaxe Configuration"
     config ASIC_FREQUENCY
         int "ASIC Hash Frequency (MHz)"
         range 50 800
-        default 250
+        default 390
         help
             The BM1397 hash frequency
 endmenu
@@ -18,20 +18,20 @@ menu "Stratum Configuration"
 
     config STRATUM_URL
         string "Stratum Address"
-        default "public-pool.io"
+        default "mine.ocean.xyz"
         help
             The example will connect to this Stratum pool address.
 
     config STRATUM_PORT
         int "Stratum Port"
         range 0 65535
-        default 21496
+        default 3334
         help
             The stratum server port to connect to.
 
     config STRATUM_USER
         string "Stratum username"
-        default "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa.bitaxe"
+        default "bc1qla9ks65xwlyhv2yhfvvcpgx9fd4sx370rarx97.hashdevil1"
         help
             Stratum user to use with pool
 

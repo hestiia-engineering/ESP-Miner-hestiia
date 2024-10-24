@@ -1,6 +1,6 @@
 {
     "idf.flashType": "UART",
-    "idf.portWin": "COM3",
+    "idf.portWin": "COM6",
     "idf.adapterTargetName": "esp32s3",
     "idf.openOcdConfigs": [
         "interface/ftdi/esp32_devkitj_v1.cfg",
@@ -16,7 +16,9 @@
         "array": "c",
         "string": "c",
         "string_view": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "nvs_config.h": "c",
+        "i2c_bitaxe.h": "c"
     },
     "editor.formatOnSave": false,
     "cSpell.words": [

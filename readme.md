@@ -35,9 +35,9 @@ The following are recommendations but it is necessary that you do have all value
   ```
   key,type,encoding,value
   main,namespace,,
-  asicfrequency,data,u16,490
+  asicfrequency,data,u16,390
   asicvoltage,data,u16,1200
-  asicmodel,data,string,BM1368
+  asicmodel,data,string,BM1397
   devicemodel,data,string,supra
   boardversion,data,string,400
   ```

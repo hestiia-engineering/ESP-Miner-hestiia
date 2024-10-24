@@ -1,20 +1,13 @@
 idf_component_register(
-SRCS
-    "adc.c"
-    "DS4432U.c"
-    "EMC2101.c"
+SRCS 
     "fonts.c"
-    "i2c_master.c"
-    "INA260.c"
     "led_controller.c"
     "main.c"
     "nvs_config.c"
-    "oled.c"
     "system.c"
-    "TMP1075.c"
-    "TPS546.c"
-    "vcore.c"
     "work_queue.c"
+    "i2c_bitaxe.c"
+    "TMP464.c"
     "./http_server/http_server.c"
     "./self_test/self_test.c"
     "./tasks/stratum_task.c"
