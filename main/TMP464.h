@@ -11,6 +11,8 @@
  */
 
 #define TMP464_TEMP_REG             0x00         ///< Temperature register
+#define TMP464_TEMP_DIE1            0x01
+#define TMP464_TEMP_DIE2            0x02
 #define TMP464_CONFIG_REG			0x30
 #define TMP464_TEMP_HYST_REG			0x38
 #define TMP464_LOCK_REG				0xC4
@@ -38,5 +40,7 @@
 esp_err_t TMP464_init(void);
 bool TMP464_installed(void);
 float TMP464_read_temperature(void);
+float TMP464_read_temp_die1(void);
+float TMP464_read_temp_die2(void);
 
 #endif /* TMP464_H_ */

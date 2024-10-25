@@ -8,6 +8,7 @@
 
 #define I2C_MASTER_NUM 0            /*!< I2C master i2c port number, the number of i2c peripheral interfaces available will depend on the chip */
 #define I2C_MASTER_TIMEOUT_MS 1000
+#define I2C_DELAY_MS 5
 
 //#define I2C_DEFAULT_TIMEOUT ( I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS )
 #define I2C_DEFAULT_TIMEOUT -1  //-1 means wait forever
@@ -59,7 +60,13 @@ esp_err_t i2c_bitaxe_register_read(i2c_master_dev_handle_t dev_handle, uint8_t r
     // return i2c_master_write_read_device(I2C_MASTER_NUM, device_address, &reg_addr, 1, data, len, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
     //ESP_LOGI("I2C", "Reading %d bytes from register 0x%02X", len, reg_addr);
 
-    return i2c_master_transmit_receive(dev_handle, &reg_addr, 1, read_buf, len, I2C_DEFAULT_TIMEOUT);
+    i2c_master_transmit(dev_handle, &reg_addr, 1, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS); // Modified for Hashboard Test
+
+    vTaskDelay( I2C_DELAY_MS / portTICK_PERIOD_MS);
+
+    return i2c_master_receive(dev_handle, read_buf, len, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
+
+    //return i2c_master_transmit_receive(dev_handle, &reg_addr, 1, read_buf, len, I2C_DEFAULT_TIMEOUT);
 }
 
 /**

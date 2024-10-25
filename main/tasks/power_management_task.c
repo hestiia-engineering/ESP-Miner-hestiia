@@ -7,6 +7,7 @@
 #include "mining.h"
 #include "nvs_config.h"
 #include "serial.h"
+#include "i2c_bitaxe.h"
 #include "TMP464.h"
 #include <string.h>
 
@@ -82,9 +83,15 @@ void POWER_MANAGEMENT_task(void * pvParameters)
 
     uint16_t auto_fan_speed = nvs_config_get_u16(NVS_CONFIG_AUTO_FAN_SPEED, 1);
 
-    TMP464_init();
+    i2c_bitaxe_init();
 
-    TMP464_installed();
+    esp_err_t result = TMP464_init();
+
+    if (result == ESP_OK){
+
+        TMP464_installed();
+
+    }
 
     switch (GLOBAL_STATE->device_model) {
         case DEVICE_MAX:
@@ -144,19 +151,23 @@ void POWER_MANAGEMENT_task(void * pvParameters)
                 case DEVICE_ULTRA:
                 case DEVICE_SUPRA:
                     // power_management->chip_temp_avg = EMC2101_get_external_temp();
+                    power_management->chip_temp_avg = TMP464_read_temperature();  // TEMP LOCAL - modified for Hashboard Test
+                    power_management->die_temp1 = TMP464_read_temp_die1(); // DIE TEMP1 modified for Hashboard Test
+                    power_management->die_temp2 = TMP464_read_temp_die2(); // DIE TEMP2 modified for Hashboard Test
+                    power_management->power = 110; // Modified for Hashboard Test
+                    power_management->voltage = 8500; // Modified for Hashboard Test
 
-                    power_management->chip_temp_avg = TMP464_read_temperature();  // <-- A checker
 
                     if ((power_management->chip_temp_avg > THROTTLE_TEMP) &&
                         (power_management->frequency_value > 50 || power_management->voltage > 1000)) {
-                        ESP_LOGE(TAG, "OVERHEAT ASIC %fC", power_management->chip_temp_avg );
+                        //ESP_LOGE(TAG, "OVERHEAT ASIC %fC", power_management->chip_temp_avg );
 
                         // EMC2101_set_fan_speed(1);
                         if (power_management->HAS_POWER_EN) {
                             gpio_set_level(GPIO_NUM_10, 1);
                         }
-                        nvs_config_set_u16(NVS_CONFIG_ASIC_VOLTAGE, 1000);
-                        nvs_config_set_u16(NVS_CONFIG_ASIC_FREQ, 50);
+                        nvs_config_set_u16(NVS_CONFIG_ASIC_VOLTAGE, 1200);
+                        //nvs_config_set_u16(NVS_CONFIG_ASIC_FREQ, 50); // Modified for Hashboard Test
                         nvs_config_set_u16(NVS_CONFIG_FAN_SPEED, 100);
                         nvs_config_set_u16(NVS_CONFIG_AUTO_FAN_SPEED, 0);
                         exit(EXIT_FAILURE);
@@ -176,7 +187,7 @@ void POWER_MANAGEMENT_task(void * pvParameters)
 						// power_management->vr_temp = (float)TPS546_get_temperature();
 					} else {
                         // power_management->chip_temp_avg = EMC2101_get_internal_temp() + 5;
-    					power_management->vr_temp = 0.0;
+    					//power_management->vr_temp = 0.0;
 					}
 
                     // EMC2101 will give bad readings if the ASIC is turned off
@@ -186,7 +197,7 @@ void POWER_MANAGEMENT_task(void * pvParameters)
 
                     if ((power_management->vr_temp > TPS546_THROTTLE_TEMP || power_management->chip_temp_avg > THROTTLE_TEMP) &&
                         (power_management->frequency_value > 50 || power_management->voltage > 1000)) {
-                        ESP_LOGE(TAG, "OVERHEAT  VR: %fC ASIC %fC", power_management->vr_temp, power_management->chip_temp_avg );
+                        //ESP_LOGE(TAG, "OVERHEAT  VR: %fC ASIC %fC", power_management->vr_temp, power_management->chip_temp_avg );
 
                         // EMC2101_set_fan_speed(1);
                         if (GLOBAL_STATE->board_version == 402) {
@@ -195,8 +206,8 @@ void POWER_MANAGEMENT_task(void * pvParameters)
                         } else if (power_management->HAS_POWER_EN) {
                             gpio_set_level(GPIO_NUM_10, 1);
                         }
-                        nvs_config_set_u16(NVS_CONFIG_ASIC_VOLTAGE, 1000);
-                        nvs_config_set_u16(NVS_CONFIG_ASIC_FREQ, 50);
+                        nvs_config_set_u16(NVS_CONFIG_ASIC_VOLTAGE, 1200);
+                        //nvs_config_set_u16(NVS_CONFIG_ASIC_FREQ, 50); // Modified for Hashboard Test
                         nvs_config_set_u16(NVS_CONFIG_FAN_SPEED, 100);
                         nvs_config_set_u16(NVS_CONFIG_AUTO_FAN_SPEED, 0);
                         nvs_config_set_u16(NVS_CONFIG_OVERHEAT_MODE, 1);

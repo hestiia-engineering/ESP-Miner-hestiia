@@ -28,6 +28,10 @@ bool TMP464_installed(void)
 
     // read the configuration register
     ESP_LOGI(TAG, "Reading configuration register");
+    result = i2c_bitaxe_register_read(TMP464_dev_handle, TMP464_MANUFACTURER_ID_REG, data, 2);
+    ESP_LOGI(TAG, "Sensor MANUFACTURER ID = %02X %02X", data[0], data[1]);
+    result = i2c_bitaxe_register_read(TMP464_dev_handle, TMP464_DEVICE_ID_REG, data, 2);
+    ESP_LOGI(TAG, "Sensor DEVICE ID = %02X %02X", data[0], data[1]);
     result = i2c_bitaxe_register_read(TMP464_dev_handle, TMP464_CONFIG_REG, data, 2);
     ESP_LOGI(TAG, "Configuration = %02X %02X", data[0], data[1]);
 
@@ -41,10 +45,43 @@ float TMP464_read_temperature(void)
     float result;
 
     ESP_ERROR_CHECK(i2c_bitaxe_register_read(TMP464_dev_handle, TMP464_TEMP_REG, data, 2));
-    ESP_LOGI(TAG, "Raw Temperature = %02X %02X", data[0], data[1]);
+    //ESP_LOGI(TAG, "Raw Temperature = %02X %02X", data[0], data[1]);
 
-    raw_value = data[0] << 8 & data[1];
+    raw_value = (data[0] << 8) | data[1];
     result = raw_value * 0.0078125; 
+    ESP_LOGI(TAG, "Temp local = %f °C", result);
+    //ESP_LOGI(TAG, "Temperature[%d] = %d", device_index, data[0]);
+    return result;
+}
+
+float TMP464_read_temp_die1(void)
+{
+    uint8_t data[2];
+    uint16_t raw_value;
+    float result;
+
+    ESP_ERROR_CHECK(i2c_bitaxe_register_read(TMP464_dev_handle, TMP464_TEMP_DIE1, data, 2));
+    //ESP_LOGI(TAG, "Raw Temperature = %02X %02X", data[0], data[1]);
+
+    raw_value = (data[0] << 8) | data[1];
+    result = raw_value * 0.0078125; 
+    ESP_LOGI(TAG, "Die temp 1 = %f °C", result);
+    //ESP_LOGI(TAG, "Temperature[%d] = %d", device_index, data[0]);
+    return result;
+}
+
+float TMP464_read_temp_die2(void)
+{
+    uint8_t data[2];
+    uint16_t raw_value;
+    float result;
+
+    ESP_ERROR_CHECK(i2c_bitaxe_register_read(TMP464_dev_handle, TMP464_TEMP_DIE2, data, 2));
+    //ESP_LOGI(TAG, "Raw Temperature = %02X %02X", data[0], data[1]);
+
+    raw_value = (data[0] << 8) | data[1];
+    result = raw_value * 0.0078125; 
+    ESP_LOGI(TAG, "Die temp 2 = %f °C", result);
     //ESP_LOGI(TAG, "Temperature[%d] = %d", device_index, data[0]);
     return result;
 }

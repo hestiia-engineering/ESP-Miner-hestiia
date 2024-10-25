@@ -3,9 +3,11 @@
 
 typedef struct
 {
-    uint16_t fan_perc;
-    uint16_t fan_rpm;
+    float fan_perc;
+    float fan_rpm;
     float chip_temp[6];
+    float die_temp1;  // Add for Hashboard Test
+    float die_temp2;  // Add for Hashboard Test
     float chip_temp_avg;
     float vr_temp;
     float voltage;
