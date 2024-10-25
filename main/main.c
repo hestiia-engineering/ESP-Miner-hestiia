@@ -27,8 +27,8 @@ void app_main(void)
     ESP_LOGI(TAG, "Welcome to the hashdevil");
     ESP_ERROR_CHECK(nvs_flash_init());
 
-    //GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = nvs_config_get_u16(NVS_CONFIG_ASIC_FREQ, CONFIG_ASIC_FREQUENCY);
-    GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = 390 ;  // Modified for Hashboard
+    GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = nvs_config_get_u16(NVS_CONFIG_ASIC_FREQ, CONFIG_ASIC_FREQUENCY);
+    //GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value = 390 ;  // Modified for Hashboard
     ESP_LOGI(TAG, "NVS_CONFIG_ASIC_FREQ %f", (float)GLOBAL_STATE.POWER_MANAGEMENT_MODULE.frequency_value);
 
     GLOBAL_STATE.device_model_str = nvs_config_get_string(NVS_CONFIG_DEVICE_MODEL, "supra"); //modified for HashBoard 12 asics
