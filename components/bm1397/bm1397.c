@@ -404,6 +404,7 @@ asic_result *BM1397_receive_work(void)
     }
     else if (received == 0)
     {
+        ESP_LOGI(TAG, "Didn't find a work");
         // Didn't find a solution, restart and try again
         return NULL;
     }
@@ -425,7 +426,7 @@ task_result *BM1397_proccess_work(void *pvParameters)
 
     if (asic_result == NULL)
     {
-        ESP_LOGI(TAG, "return null");
+        ESP_LOGI(TAG, "return null - Can't process a work");
         return NULL;
     }
 

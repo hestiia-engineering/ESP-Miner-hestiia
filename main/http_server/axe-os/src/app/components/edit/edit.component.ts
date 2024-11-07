@@ -27,7 +27,12 @@ export class EditComponent implements OnInit {
   @Input() uri = '';
 
   public BM1397DropdownFrequency = [
+    { name: '250', value: 250 },
+    { name: '290', value: 290 },
+    { name: '300', value: 300 },
+    { name: '325', value: 325 },
     { name: '350', value: 350 },
+    { name: '375', value: 375 },
     { name: '400', value: 400 },
     { name: '425 (default)', value: 425 },
     { name: '450', value: 450 },
